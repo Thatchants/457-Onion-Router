@@ -7,10 +7,10 @@ import requests
 import random
 
 def connection(c, addr):
-    print('made it to connection')
-    #recvd_data = c.recv(1024)
-    #data = pickle.loads(recvd_data)
-    data = [2, [('129.82.44.69', '7812'), ('129.82.44.73', '1542')], 'http://google.com']
+    print('connected with %s', addr)
+    recvd_data = c.recv(1024)
+    data = pickle.loads(recvd_data)
+    #data = [2, [('129.82.44.69', '7812'), ('129.82.44.73', '1542')], 'http://google.com']
     if data[0] == 0 or True:
         end_of_chain(data[2])
     else:
