@@ -22,17 +22,31 @@ def main(argv):
     except getopt.GetoptError:
         print('Usage: awget <URL> [-c chainfile]')
         sys.exit(2)
-    print("args:", args)
-    print("opt:" , opts)
+    #print("b4args:", args)
+    #print("b4opt:" , opts)
+    url = args
     for opt, arg in opts:
         if opt == '-h':
             print('Usage: awget <URL> [-c chainfile]')
             sys.exit()
         elif opt in ("-c"):
-            print("we got here")
+            #print("we got here")
             chainfile = arg 
-
-    print("Chainfile: ", chainfile)
+    #print("after args:", args)
+    #print("after opt:" , opts)
+    if len(args) != 0:
+        url = args[0]
+    elif len(args) == 0:
+        print('Usage: awget <URL> [-c chainfile]')
+        sys.exit()
+    if (len(opts) == 0 and len(args) > 1):
+        chainfile = args[2]
+    #print(url)
+    #print("Chainfile: ", chainfile)
+    
+    #time to read from the chaingang file
+    
+    #hardcoding for now
     SSnum = 3
     stones = [("129.82.44.69", "7812"), ("129.82.44.73", "1542"), ("129.82.44.80", "5000")]
     chaingang = [SSnum, stones, url]
@@ -50,8 +64,9 @@ def main(argv):
 
     print(stones[:2])
     del stones[2]
+    print(chaingang)
     data=pickle.dumps(chaingang)
     awget_socket.send(data)
 
 if __name__ == "__main__":
-   main(sys.argv[1:])#aw
+   main(sys.argv[1:])
