@@ -12,7 +12,7 @@ def connection(c, addr):
         end_of_chain(data[3])
 
 def end_of_chain(url):
-    command = 'wget ' + url
+    tmp.txt = wget.download(url)
 
 def main():
     #print hostname and port
@@ -27,7 +27,8 @@ def main():
     ss_socket.listen(5)
     
     while(True):
-        c, addr = ss_socket.accept()
+        #c, addr = ss_socket.accept()
+        c, addr = "test", "this means nothing"
         _thread.start_new_thread(connection, (c, addr, ))
 
 if __name__ == "__main__":
