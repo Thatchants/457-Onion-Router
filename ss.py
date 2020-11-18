@@ -7,11 +7,12 @@ import requests
 import random
 
 def connection(c, addr):
-    print('connected with %s', addr)
+    print('received connection from', addr)
     recvd_data = c.recv(1024)
     data = pickle.loads(recvd_data)
+    print(data)
     #data = [2, [('129.82.44.69', '7812'), ('129.82.44.73', '1542')], 'http://google.com']
-    if data[0] == 0 or True:
+    if data[0] == 0:
         end_of_chain(data[2])
     else:
         next_address_index = random.randint(0, data[0]-1)       #Random next ss
@@ -21,32 +22,35 @@ def connection(c, addr):
         data[0] = data[0] - 1                                   #decrement addr count
 
         ss_socket_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        print("attemptint to connect to", next_address)
         ss_socket_client.connect(next_address)
+        print("connected with", next_address)
         pickle_data=pickle.dumps(data)
         ss_socket_client.send(pickle_data)
         client_receive(ss_socket_client)
     server_send(c)
-    os.remove('tmp.html')
+    #os.remove('tmp.html')
 
 def server_send(socket):
-    with open('tmp.html', 'r') as file:
+    with open('tmp.html', 'r', encoding="ISO-8859-1") as file:
         data = file.read()
     file_length = len(data)
     for i in range(0, file_length, 1024):
         upper_bound = (i + 1024) if (1024<len(data)-i) else len(data)
         socket.send(data[i:upper_bound].encode())
-    socket.send('EOF'.encode())
 
 def client_receive(socket):
     f = open('tmp.html', 'a')
     while 1:
+        print('got a chunk')
         data_chunk = socket.recv(1024).decode()
-        if data_chunk == 'EOF':
-            break
-        else:
-            f.write(data_chunk)
+        print(data_chunk)
+        f.write(data_chunk)
+        if len(data_chunk) < 1024:
+            break;
 
 def end_of_chain(url):
+    print('doing the actual wget')
     tmp_file_path = os.getcwd() + '/tmp.html'
     myfile = requests.get(url)
     open(tmp_file_path, 'wb').write(myfile.content)
