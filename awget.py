@@ -7,11 +7,6 @@ import socket
 import pickle
 #aw
 
-#argParser = argparse.ArgumentParser()
-#argParser.add_argument('-c')
-#args = argParser.parse_args()
-
-#print(args)
 
 def main(argv):
     url = ""
@@ -45,12 +40,27 @@ def main(argv):
     #print("Chainfile: ", chainfile)
     
     #time to read from the chaingang file
+    cf = open(chainfile, "r")
+    #cf.read().splitlines()
+    
+    
+    chainlist = cf.read().splitlines()
+    
     
     #hardcoding for now
-    SSnum = 2
-    stones = [("129.82.44.167", "4999"), ("129.82.44.141", "5999")]
+    SSnum = int(chainlist[0])
+    stones = chainlist[1:]
+  
+    count = 0
+    for stone in stones:
+        stonefrag = stone.split(' ')
+        
+        stone = (stonefrag[0], stonefrag[1])
+        stones[count] = stone
+        count = count +1
+ 
     chaingang = [SSnum, stones, url]
-
+    print(chaingang)
     firstSSnum = random.randrange(0, len(stones))
     firstSS = stones[firstSSnum]
 
