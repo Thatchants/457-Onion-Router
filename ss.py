@@ -29,25 +29,51 @@ def connection(c, addr):
         ss_socket_client.send(pickle_data)
         client_receive(ss_socket_client)
     server_send(c)
-    #os.remove('tmp.html')
+    os.remove('tmp.html')
 
 def server_send(socket):
-    with open('tmp.html', 'r', encoding="ISO-8859-1") as file:
-        data = file.read()
+    #with open('tmp.html', 'r', encoding="ISO-8859-1") as file:
+    #    data = file.read()
+    #file_length = len(data)
+    #for i in range(0, file_length, 1024):
+    #    upper_bound = (i + 1024) if (1024<len(data)-i) else len(data)
+    #    socket.send(data[i:upper_bound].encode())
+    in_file = open('tmp.html', 'rb')
+    data = in_file.read()
+    data += b'EOF'
+    print('len data after read: ', len(data))
+    in_file.close()
+    
     file_length = len(data)
     for i in range(0, file_length, 1024):
-        upper_bound = (i + 1024) if (1024<len(data)-i) else len(data)
-        socket.send(data[i:upper_bound].encode())
+        if file_length - i < 1024:
+            print('sending', len(data[i:]))
+            socket.send(data[i:])
+        else:
+            print('sending', len(data[i:i+1024]))
+            socket.send(data[i:i + 1024])
 
 def client_receive(socket):
-    f = open('tmp.html', 'a')
+    #f = open('tmp.html', 'a')
+    #while 1:
+    #    print('got a chunk')
+    #    data_chunk = socket.recv(1024).decode()
+    #    print(data_chunk)
+    #    f.write(data_chunk)
+    #    if len(data_chunk) < 1024:
+    #        break;
+    out_file = open('tmp.html', 'ab')
     while 1:
-        print('got a chunk')
-        data_chunk = socket.recv(1024).decode()
-        print(data_chunk)
-        f.write(data_chunk)
-        if len(data_chunk) < 1024:
-            break;
+        data_chunk = socket.recv(1024)
+        print(len(data_chunk))
+        breaktime = False
+        if data_chunk[-3:] == b'EOF':
+            data_chunk = data_chunk[:-3]
+            breaktime = True
+        out_file.write(data_chunk)
+        if breaktime:
+            break
+    out_file.close()
 
 def end_of_chain(url):
     print('doing the actual wget')
