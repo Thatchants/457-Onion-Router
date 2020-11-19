@@ -1,5 +1,6 @@
 # 457-Onion-Router
-Usage: awget <URL> [-c chainfile]
+Usage: python awget.py <URL> [-c chainfile]
+Usage: python ss.py [-p port]
 
 The project works as intended.
 
@@ -7,3 +8,10 @@ Run ss.py on the machines in the chaingang.txt file first, then start awget.py o
 
 URL must start with either http:// or https://.
 
+Each SS should run in a different directory on a different machine.
+
+If no port is given, a SS will run on port 5000
+
+TEAM MEMBERS:
+Andrew Book
+Finn Sizer
