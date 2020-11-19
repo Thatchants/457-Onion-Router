@@ -5,6 +5,7 @@ import pickle
 import os
 import requests
 import random
+import getopt
 
 def connection(c, addr):
     print('received connection from', addr)
@@ -69,14 +70,35 @@ def end_of_chain(url):
     open(tmp_file_path, 'wb').write(myfile.content)
 
 def find_filename(url):
+    common_endings = ['com','edu','gov','org','io','uk','ca','fr','tv','net','int','mil','us']
     last_slash = url.rindex('/')
     if last_slash == len(url) - 1:
         return 'index.html'
-    return url[last_slash+1:]
+    filename = url[last_slash+1:]
+    for ending in common_endings:
+        dot_ending = '.' + ending
+        if filename.endswith(dot_ending):
+            return 'index.html'
+    return filename
 
-def main():
+def main(argv):
     #print hostname and port
-    port = sys.argv[1]
+    port = 5000
+    if len(argv) >= 1:
+        port = sys.argv[1]
+    try:
+        opts, args = getopt.getopt(argv, "hp:", ["port="])
+    except getopt.GetoptError:
+        print('Usage: ss [-p port]')
+        sys.exit(2)
+    
+    for opt, arg in opts:
+        if opt == '-h':
+            print('Usage: ss [-p port]')
+            sys.exit()
+        elif opt in ("-p"):
+            port = arg
+    #port = sys.argv[1]
     hostname = socket.gethostname()
     print('Hostname:', hostname)
     print('Port:', port)
@@ -92,4 +114,4 @@ def main():
         _thread.start_new_thread(connection, (c, addr, ))
 
 if __name__ == "__main__":
-    main()
+   main(sys.argv[1:])
