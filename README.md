@@ -1,5 +1,6 @@
 # 457-Onion-Router
 Usage: python awget.py <URL> [-c chainfile]
+
 Usage: python ss.py [-p port]
 
 The project works as intended.
@@ -13,5 +14,7 @@ Each SS should run in a different directory on a different machine.
 If no port is given, a SS will run on port 5000
 
 TEAM MEMBERS:
+
 Andrew Book
+
 Finn Sizer
